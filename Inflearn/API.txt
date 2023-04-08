@@ -1,0 +1,68 @@
+API
+
+@ResponseBody를 사용
+- HTTP의 Bodt에 문자 내용을 직접 반환				//객체일 경우 객체를 문자로 변환
+- viewResolver 대신에 HTTPMessageConverter가 동작		//"스프링부트에서 알아서 등록해줌"
+- 기본 문자처리: StringHttpMessageConverter
+- 기본 객체처리: MappingJackson2HttpMessageConverter	//객체를 Json으로 바꿔주는 라이브러리 Jackson ,google에서 만든 Gson
+- byte 처리 등등 기타 여러 HttpMessageConverter가 기본으로 등록
+
+참고: jackson뿐 아니라 클라이언트 HTTP Accept 헤더에서 Json요청이 오면 Json으로 받음, 어떤것ex)xml.converter으로 받겠다하면 그걸로 바꿔줌
+
+요즘엔 Json으로만 사용한다 객체 반환도 Json
+
+
+요약
+정적컨텐츠 (파일을 html그대로 내려준다)
+
+MVC와 템플릿 엔진: 템플릿엔진을 Model View Controller로 쪼개서 View를 템플릿엔진 html을 좀더 프로그램한것으로 랜더링하여 랜더링된 html을 고객에게 전달해준다.
+
+
+ApI방식
+객체를 반환하는 것
+HttpMessageConverter통해 Json 스타일로 바꿔서 반환을 해주는것
+View없이 Httpresponse에 값을 넣어서 반환해 주는 것
+
+
+
+비즈니스 요구사항 정리
+회원 도메인, 회원 도메인 객체를 저장하고 불러올수 있는 Repository를 만들기
+회원 Repository 테스트 케이스 
+회원 서비스 개발
+회원 서비스 테스트
+
+
+비즈니스 요구사항 정리
+-데이터:  회원ID, 회원 이름
+-기능: 회원등록, 조회
+
+단순한 예제로 스프링 생태환경 알아보기
+
+
+
+일반적인 웹 어플리케이션 계층 구조
+-컨트롤러 	->	서비스		->	레파지토리	->	DB
+
+
+		도메인
+
+----------------------------------------------------
+컨트롤러 웹 MVC 컨트롤러의 역할
+서비스: 핵심 비즈니스 로직 구현
+레파지토리: 데이터베이스에 접근, 도메인 객체를 DB에 저장하고 관리
+도메인: 비즈니스 도메인 객체
+
+
+클래스 의존관계
+
+MemberService 	->	interface(MemberRepository)	//아직 데이터 저장소가 선정되지 않아서
+
+					^
+					Memory MemberRepository		//Memory 구현체
+
+- 아직 데이터 저장소가 선정되지 않아서, 우선 인터페이스로 구현 클래스를 변경할 수 있도록 설계
+- 데이터 저장소는 RDB, NoSQL 등 다양한 저장소를 고민중인 상황으로 가정
+- 개발을 진행하기 위해 초기 개발 단계에서는 구현체로 가벼운 메모리 기반의 데이터 저장소 사용
+
+
+섹션3. 회원 관리 예제까지
